@@ -1,17 +1,14 @@
 ## Handling missing data
 
-### Putting values to 0
-
+- Putting values to 0
 > - Makes the attribute irrelevant
 > - Might be an issue if 0 makes sense for some attribute
 
----
-
 ## Handling sequence
 
-### Recurrent neural network
+- Recurrent neural network
 
-### LSTM (Long Short-Term Memory)
+- LSTM (Long Short-Term Memory)
 
 ---
 
