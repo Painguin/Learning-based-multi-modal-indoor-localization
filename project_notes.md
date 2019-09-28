@@ -12,7 +12,19 @@
 
 ---
 
+
+
+# Evaluation
+
+Split the data into a train set and a test set. The test set would be used only as a final result.  
+Then split the train set into a true train set and validation set to test different nn architectures and different hyperparameters.  
+To have more robust statistics, cross-validation and/or multiple trials can be done which would provide mean and variance estimations.
+
 # Sources
+
+### Papers
+- [Multi-Modal Probabilistic Indoor Localization on a Smartphone](https://infoscience.epfl.ch/record/270245?ln=en)
+- [https://ai.stanford.edu/~ang/papers/icml11-MultimodalDeepLearning.pdf](Multimodal Deep Learning)
 
 ### Neural network solutions
 - [A Beginner’s Guide on Recurrent Neural Networks with PyTorch](https://blog.floydhub.com/a-beginners-guide-on-recurrent-neural-networks-with-pytorch/)
