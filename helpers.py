@@ -85,25 +85,55 @@ class RandomSimulation(Dataset):
         ), 1)
         
         # generate signals from the anchors distances
-        distances = self.simulations[..., None, :].sub(self.anchors_pos).pow(2).sum(dim=3).sqrt()
-        self.features = generate_features(distances, n_rssi_measurements)
+        self.distances = self.simulations[..., None, :].sub(self.anchors_pos).pow(2).sum(dim=3).sqrt()
+        self.features = generate_features(self.distances, n_rssi_measurements)
         
-    def plot_simulation(self, positions):
-        plt.xlim(self.min_x, self.max_x)
-        plt.ylim(self.min_y, self.max_y)
-        plt.plot(*positions.T)
-
-        for x, y in self.anchors_pos:
-            plt.plot(x, y, '.', c='r', markersize=15)
-
-        plt.plot(*positions[0], '*', c='green', markersize=15)
-        plt.plot(*positions[-1], '*', c='orange', markersize=15);
+    @classmethod
+    def from_file(cls, path):
+        loaded_file = torch.load(path)
+        self = cls.__new__(cls)
+        self.n_simulations = loaded_file['n_simulations']
+        self.n_steps = loaded_file['n_steps']
+        self.min_x = loaded_file['min_x']
+        self.max_x = loaded_file['max_x']
+        self.min_y = loaded_file['min_y']
+        self.max_y = loaded_file['max_y']
+        self.simulations = loaded_file['simulations']
+        self.anchors_pos = loaded_file['anchors_pos']
+        self.features = loaded_file['features']
+        return self 
         
     def __len__(self):
         return self.n_simulations
 
     def __getitem__(self, idx):
         return self.features[idx], self.simulations[idx]
+        
+    def save(self, path):
+        to_save = {
+            'n_simulations': self.n_simulations,
+            'n_steps': self.n_steps,
+            'min_x': self.min_x,
+            'max_x': self.max_x,
+            'min_y': self.min_y,
+            'max_y': self.max_y,
+            'simulations': self.simulations,
+            'anchors_pos': self.anchors_pos,
+            'features': self.features
+        }
+        torch.save(to_save, path)
+        
+    def plot_simulation(self, positions, ax=plt):
+        
+        ax.grid(True)
+        ax.axis('equal')
+        ax.plot(*positions.T)
+
+        for x, y in self.anchors_pos:
+            ax.plot(x, y, '.', c='r', markersize=15)
+
+        ax.plot(*positions[0], '*', c='green', markersize=15)
+        ax.plot(*positions[-1], '*', c='orange', markersize=15);
     
     def get_random_loaders(self, split_ratio, batch_size):
         indices = torch.randperm(self.n_simulations)
