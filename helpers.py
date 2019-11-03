@@ -67,7 +67,7 @@ def generate_features(dist, n_samples):
 
 class RandomSimulation(Dataset):
     
-    def __init__(self, n_simulations, n_steps, min_x, min_y, max_x, max_y, n_anchors, momentum=0.9, n_rssi_measurements=10):
+    def __init__(self, n_simulations, n_steps, min_x, min_y, max_x, max_y, anchors_pos, momentum=0.9, n_rssi_measurements=10):
         self.n_simulations = n_simulations
         self.n_steps = n_steps
         self.min_x = min_x
@@ -79,13 +79,10 @@ class RandomSimulation(Dataset):
         self.simulations = torch.stack([generate_random_simulation(min_x, max_x, min_y, max_y, n_steps, momentum) for i in range(n_simulations)])
         
         # generate random anchor positions
-        self.anchors_pos = torch.stack((
-            min_x + (max_x - min_x) * torch.rand(n_anchors),
-            min_y + (max_y - min_y) * torch.rand(n_anchors)
-        ), 1)
+        self.anchors_pos = anchors_pos
         
         # generate signals from the anchors distances
-        self.distances = self.simulations[..., None, :].sub(self.anchors_pos).pow(2).sum(dim=3).sqrt()
+        self.distances = self.simulations[..., None, :].sub(self.anchors_pos).pow(2).sum(dim=3).sqrt() + 1e-2
         self.features = generate_features(self.distances, n_rssi_measurements)
         
     @classmethod
