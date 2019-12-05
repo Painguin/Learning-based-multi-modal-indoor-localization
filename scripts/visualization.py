@@ -76,17 +76,18 @@ def plot_embedding_pca(encoder, data, pca, indices):
             ax2 = axes[1]
             ax3 = axes[2]
         
-        
         ax1.grid(True)
-        ax1.plot(*embedding.T)
-        ax1.plot(*embedding[0], '*', c='green', markersize=15)
-        ax1.plot(*embedding[-1], '*', c='orange', markersize=15);
-        
+        ax1.plot(*pca_embedding.T)
+        ax1.plot(*pca_embedding[0], '*', c='green', markersize=15)
+        ax1.plot(*pca_embedding[-1], '*', c='orange', markersize=15)
+        ax1.axis('equal')
+
         ax2.grid(True)
-        ax2.plot(*pca_embedding.T)
-        ax2.plot(*pca_embedding[0], '*', c='green', markersize=15)
-        ax2.plot(*pca_embedding[-1], '*', c='orange', markersize=15);
-    
+        ax2.plot(*embedding.T)
+        ax2.plot(*embedding[0], '*', c='green', markersize=15)
+        ax2.plot(*embedding[-1], '*', c='orange', markersize=15)
+        ax2.axis('equal')
+
         data.plot_simulation(simulation, ax3)
     
     for ax, col in zip(axes[0] if len(indices) > 1 else axes, ['PCA embedding', 'Encoder embedding', 'Simulation']):

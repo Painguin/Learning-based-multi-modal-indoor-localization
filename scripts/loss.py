@@ -9,9 +9,8 @@ from torch.nn.functional import mse_loss
 def recovery_loss(source, target, encoded, decoded):
     return mse_loss(decoded, source)
 
-N_FIXED_POINTS = 3
 def fixed_points_loss(source, target, encoded, decoded):
-    mask = [0, encoded.size(0) // 2, -1]
+    mask = [0]
     return mse_loss(encoded[mask], target[mask])
 
 MAX_DISTANCE_THRESHOLD = 1
