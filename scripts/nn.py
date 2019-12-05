@@ -8,15 +8,35 @@ from torch.optim import Adam
 
 import numpy as np
 
-def create_autoencoder_model(input_dim, hid_dim, bot_dim):
+def create_autoencoder_model(input_dim, hid_dim, bot_dim, activation=nn.ReLU()):
     encoder = nn.Sequential(
-        nn.Linear(input_dim, hid_dim), nn.ReLU(),
+        nn.Linear(input_dim, hid_dim), activation,
         nn.Linear(hid_dim, bot_dim)
     )
 
     decoder = nn.Sequential(
-        nn.Linear(bot_dim, hid_dim), nn.ReLU(),
+        nn.Linear(bot_dim, hid_dim), activation,
         nn.Linear(hid_dim, input_dim)
+    )
+
+    model = nn.Sequential(
+        encoder,
+        decoder
+    )
+    
+    return model
+
+def create_autoencoder_model_2hls(input_dim, hid_dim1, hid_dim2, bot_dim, activation=nn.ReLU()):
+    encoder = nn.Sequential(
+        nn.Linear(input_dim, hid_dim1), activation,
+        nn.Linear(hid_dim1, hid_dim2), activation,
+        nn.Linear(hid_dim2, bot_dim)
+    )
+
+    decoder = nn.Sequential(
+        nn.Linear(bot_dim, hid_dim2), activation,
+        nn.Linear(hid_dim2, hid_dim1), activation,
+        nn.Linear(hid_dim1, input_dim)
     )
 
     model = nn.Sequential(
